@@ -4,8 +4,9 @@ import com.android.volley.toolbox.StringRequest;
 
 public class CovidCountry {
     private String mCovidCountry, mCases, mTodayCases, mDeaths, mTodayDeaths, mRecovered, mActive, mCritical, mCasePerMillion;
+    private int rank;
 
-    public CovidCountry(String mCovidCountry, String mCases, String mTodayCases, String mDeaths, String mTodayDeaths, String mRecovered, String mActive, String mCritical, String mCasePerMillion) {
+    public CovidCountry(String mCovidCountry, String mCases, String mTodayCases, String mDeaths, String mTodayDeaths, String mRecovered, String mActive, String mCritical, String mCasePerMillion, int rank) {
         this.mCovidCountry = mCovidCountry;
         this.mCases = mCases;
         this.mTodayCases = mTodayCases;
@@ -15,6 +16,7 @@ public class CovidCountry {
         this.mActive = mActive;
         this.mCritical = mCritical;
         this.mCasePerMillion = mCasePerMillion;
+        this.rank = rank;
     }
 
     public String getmCovidCountry() {
@@ -87,5 +89,13 @@ public class CovidCountry {
 
     public void setmCasePerMillion(String mCasePerMillion) {
         this.mCasePerMillion = mCasePerMillion;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
     }
 }

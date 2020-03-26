@@ -4,10 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -39,6 +42,7 @@ public class CountryFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private Gson gson;
     private SharedPreferences.Editor editor;
+    private EditText edSearch;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -47,6 +51,7 @@ public class CountryFragment extends Fragment {
         recyclerView = root.findViewById(R.id.recycler_view_country);
         connectionStatus = root.findViewById(R.id.internet_connection_status_country_list);
         swipeRefreshLayout = root.findViewById(R.id.swipe_refresh_layout_country);
+        edSearch = root.findViewById(R.id.search_edit_text_country);
 
         covidCountries = new ArrayList<>();
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -66,7 +71,6 @@ public class CountryFragment extends Fragment {
 
         getDataFromServer();
 
-
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -74,8 +78,42 @@ public class CountryFragment extends Fragment {
             }
         });
 
+        edSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() > 0){
+                    searchCountry(charSequence.toString());
+                } else {
+                    countryAdapter = new CovidCountryAdapter(covidCountries,getActivity());
+                    recyclerView.setAdapter(countryAdapter);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         return root;
     }
+
+    private void searchCountry(String str) {
+        ArrayList<CovidCountry> myList = new ArrayList<>();
+        for (CovidCountry obj : covidCountries) {
+            if (obj.getmCovidCountry().toLowerCase().contains(str.toLowerCase())) {
+                myList.add(obj);
+            }
+        }
+
+        CovidCountryAdapter adapterClass = new CovidCountryAdapter(myList,getActivity());
+        recyclerView.setAdapter(adapterClass);
+    }
+
 
     @SuppressLint("SetTextI18n")
     private void getDataFromServer() {
@@ -102,7 +140,7 @@ public class CountryFragment extends Fragment {
 
                             covidCountries.add(new CovidCountry(jsonObject.getString("country"),jsonObject.getString("cases"),
                                     jsonObject.getString("todayCases"),jsonObject.getString("deaths"),jsonObject.getString("todayDeaths"),jsonObject.getString("recovered"),
-                                    jsonObject.getString("active"),jsonObject.getString("critical"),jsonObject.getString("casesPerOneMillion")));
+                                    jsonObject.getString("active"),jsonObject.getString("critical"),jsonObject.getString("casesPerOneMillion"),i+1));
 
                         }
 

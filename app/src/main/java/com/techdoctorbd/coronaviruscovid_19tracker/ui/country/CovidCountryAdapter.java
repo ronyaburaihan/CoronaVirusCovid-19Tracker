@@ -3,13 +3,11 @@ package com.techdoctorbd.coronaviruscovid_19tracker.ui.country;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -39,7 +37,7 @@ public class CovidCountryAdapter extends RecyclerView.Adapter<CovidCountryAdapte
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull final CountryViewHolder holder, final int position) {
-        holder.tvCountryRank.setText(""+(position+1));
+        holder.tvCountryRank.setText(""+covidCountries.get(position).getRank());
         holder.tvCountryName.setText(covidCountries.get(position).getmCovidCountry());
         holder.tvTotalCases.setText(covidCountries.get(position).getmCases());
 

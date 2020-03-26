@@ -18,4 +18,6 @@
     <string name="active">Active :</string>
     <string name="critical">Critical :</string>
     <string name="cases_per_million">Cases per million :</string>
+    <string name="search">Search</string>
+    <string name="search_by_country">Search by country</string>
 </resources>
