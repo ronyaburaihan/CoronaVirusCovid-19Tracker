@@ -1,14 +1,12 @@
 package com.techdoctorbd.coronaviruscovid_19tracker.ui.country;
 
-import com.android.volley.toolbox.StringRequest;
-
 public class CovidCountry {
-    private String mCovidCountry, mCases, mTodayCases, mDeaths, mTodayDeaths, mRecovered, mActive, mCritical, mCasePerMillion;
-    private int rank;
+    private String mCovidCountry, mTodayCases, mDeaths, mTodayDeaths, mRecovered, mActive, mCritical, mCasePerMillion,mTotalTests,mTestsPerOneMillion;
+    private int mCases,rank;
 
-    public CovidCountry(String mCovidCountry, String mCases, String mTodayCases, String mDeaths, String mTodayDeaths, String mRecovered, String mActive, String mCritical, String mCasePerMillion, int rank) {
+
+    public CovidCountry(String mCovidCountry, String mTodayCases, String mDeaths, String mTodayDeaths, String mRecovered, String mActive, String mCritical, String mCasePerMillion, String mTotalTests, String mTestsPerOneMillion, int mCases, int rank) {
         this.mCovidCountry = mCovidCountry;
-        this.mCases = mCases;
         this.mTodayCases = mTodayCases;
         this.mDeaths = mDeaths;
         this.mTodayDeaths = mTodayDeaths;
@@ -16,6 +14,9 @@ public class CovidCountry {
         this.mActive = mActive;
         this.mCritical = mCritical;
         this.mCasePerMillion = mCasePerMillion;
+        this.mTotalTests = mTotalTests;
+        this.mTestsPerOneMillion = mTestsPerOneMillion;
+        this.mCases = mCases;
         this.rank = rank;
     }
 
@@ -25,14 +26,6 @@ public class CovidCountry {
 
     public void setmCovidCountry(String mCovidCountry) {
         this.mCovidCountry = mCovidCountry;
-    }
-
-    public String getmCases() {
-        return mCases;
-    }
-
-    public void setmCases(String mCases) {
-        this.mCases = mCases;
     }
 
     public String getmTodayCases() {
@@ -89,6 +82,30 @@ public class CovidCountry {
 
     public void setmCasePerMillion(String mCasePerMillion) {
         this.mCasePerMillion = mCasePerMillion;
+    }
+
+    public String getmTotalTests() {
+        return mTotalTests;
+    }
+
+    public void setmTotalTests(String mTotalTests) {
+        this.mTotalTests = mTotalTests;
+    }
+
+    public String getmTestsPerOneMillion() {
+        return mTestsPerOneMillion;
+    }
+
+    public void setmTestsPerOneMillion(String mTestsPerOneMillion) {
+        this.mTestsPerOneMillion = mTestsPerOneMillion;
+    }
+
+    public int getmCases() {
+        return mCases;
+    }
+
+    public void setmCases(int mCases) {
+        this.mCases = mCases;
     }
 
     public int getRank() {

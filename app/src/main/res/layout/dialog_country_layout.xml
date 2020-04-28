@@ -229,6 +229,57 @@
         </LinearLayout>
 
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="@string/total_tests"
+                style="@style/LabelFontStyle"
+                android:fontFamily="@font/poppins"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/total_test_dialog"
+                android:layout_marginStart="5dp"
+                style="@style/TotalFontStyle"
+                android:textSize="20sp"
+                android:textColor="@color/blue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="@string/test_per_million"
+                style="@style/LabelFontStyle"
+                android:fontFamily="@font/poppins"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/test_per_million_dialog"
+                android:layout_marginStart="5dp"
+                style="@style/TotalFontStyle"
+                android:textSize="20sp"
+                android:textColor="@color/blue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

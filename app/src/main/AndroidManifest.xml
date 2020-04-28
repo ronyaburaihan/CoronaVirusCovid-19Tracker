@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.techdoctorbd.coronaviruscovid_19tracker">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -15,7 +16,10 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Activities.MainActivity"
-            android:label="@string/app_name">
+            android:theme="@style/AppTheme.Launcher"
+            android:screenOrientation="portrait"
+            android:label="@string/app_name"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

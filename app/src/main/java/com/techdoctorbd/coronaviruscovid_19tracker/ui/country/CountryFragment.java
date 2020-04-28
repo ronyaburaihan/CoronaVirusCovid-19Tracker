@@ -18,8 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
@@ -30,19 +28,18 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.Collections;
 
 public class CountryFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private ArrayList<CovidCountry> covidCountries;
+    private ArrayList<CovidCountry> initList,covidCountries;
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView connectionStatus;
     private CovidCountryAdapter countryAdapter;
     private SharedPreferences sharedPreferences;
     private Gson gson;
     private SharedPreferences.Editor editor;
-    private EditText edSearch;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -51,14 +48,15 @@ public class CountryFragment extends Fragment {
         recyclerView = root.findViewById(R.id.recycler_view_country);
         connectionStatus = root.findViewById(R.id.internet_connection_status_country_list);
         swipeRefreshLayout = root.findViewById(R.id.swipe_refresh_layout_country);
-        edSearch = root.findViewById(R.id.search_edit_text_country);
+        EditText edSearch = root.findViewById(R.id.search_edit_text_country);
 
         covidCountries = new ArrayList<>();
+        initList = new ArrayList<>();
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         swipeRefreshLayout.setRefreshing(true);
 
-        sharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences("Coronavirus",Context.MODE_PRIVATE);
+        sharedPreferences = requireActivity().getSharedPreferences("Coronavirus",Context.MODE_PRIVATE);
         gson = new Gson();
         String json = sharedPreferences.getString("countryList", null);
         Type type = new TypeToken<ArrayList<CovidCountry>>() {}.getType();
@@ -71,12 +69,7 @@ public class CountryFragment extends Fragment {
 
         getDataFromServer();
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getDataFromServer();
-            }
-        });
+        swipeRefreshLayout.setOnRefreshListener(this::getDataFromServer);
 
         edSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -118,61 +111,62 @@ public class CountryFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     private void getDataFromServer() {
 
-        if (InternetCheck.checkConnection(Objects.requireNonNull(getActivity()))){
+        if (InternetCheck.checkConnection(requireActivity())){
 
             connectionStatus.setVisibility(View.VISIBLE);
             connectionStatus.setText("Getting latest data");
             connectionStatus.setBackgroundColor(getResources().getColor(R.color.green));
 
-            String url = "https://corona.lmao.ninja/countries";
+            String url = "https://corona.lmao.ninja/v2/countries";
 
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, response -> {
 
-                    try {
-                        covidCountries = new ArrayList<>();
+                try {
+                    covidCountries = new ArrayList<>();
+                    initList = new ArrayList<>();
 
-                        JSONArray jsonArray = new JSONArray(response);
-                        for (int i = 0; i < jsonArray.length(); i++){
+                    JSONArray jsonArray = new JSONArray(response);
+                    for (int i = 0; i < jsonArray.length(); i++){
 
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                            covidCountries.add(new CovidCountry(jsonObject.getString("country"),jsonObject.getString("cases"),
-                                    jsonObject.getString("todayCases"),jsonObject.getString("deaths"),jsonObject.getString("todayDeaths"),jsonObject.getString("recovered"),
-                                    jsonObject.getString("active"),jsonObject.getString("critical"),jsonObject.getString("casesPerOneMillion"),i+1));
-
-                        }
-
-                        editor = sharedPreferences.edit();
-                        String json  = gson.toJson(covidCountries);
-                        editor.putString("countryList",json);
-                        editor.apply();
-
-                        countryAdapter = new CovidCountryAdapter(covidCountries,getActivity());
-                        recyclerView.setAdapter(countryAdapter);
-
-                        swipeRefreshLayout.setRefreshing(false);
-                        connectionStatus.setVisibility(View.GONE);
-
-                    } catch (Exception e){
-                        e.printStackTrace();
-                        connectionStatus.setBackgroundColor(getResources().getColor(R.color.red));
-                        connectionStatus.setText(e.getMessage());
-                        swipeRefreshLayout.setRefreshing(false);
+                        initList.add(new CovidCountry(jsonObject.getString("country"),
+                                jsonObject.getString("todayCases"),jsonObject.getString("deaths"),jsonObject.getString("todayDeaths"),jsonObject.getString("recovered"),
+                                jsonObject.getString("active"),jsonObject.getString("critical"),jsonObject.getString("casesPerOneMillion"),jsonObject.getString("tests"),jsonObject.getString("testsPerOneMillion"),jsonObject.getInt("cases"),i+1));
                     }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
+
+                    Collections.sort(initList, (p1, p2) -> p2.getmCases() - p1.getmCases());
+                    for (int j = 0; j < initList.size();j++){
+                        CovidCountry covidCountry = initList.get(j);
+                        covidCountries.add(new CovidCountry(covidCountry.getmCovidCountry(),covidCountry.getmTodayCases(),covidCountry.getmDeaths(),covidCountry.getmTodayDeaths(),
+                                covidCountry.getmRecovered(),covidCountry.getmActive(),covidCountry.getmCritical(),covidCountry.getmCasePerMillion(),covidCountry.getmTotalTests(),covidCountry.getmTestsPerOneMillion(),covidCountry.getmCases(),j+1));
+                    }
+                    editor = sharedPreferences.edit();
+                    String json  = gson.toJson(covidCountries);
+                    editor.putString("countryList",json);
+                    editor.apply();
+
+                    countryAdapter = new CovidCountryAdapter(covidCountries,getActivity());
+                    recyclerView.setAdapter(countryAdapter);
+
                     swipeRefreshLayout.setRefreshing(false);
+                    connectionStatus.setVisibility(View.GONE);
+
+                } catch (Exception e){
+                    e.printStackTrace();
                     connectionStatus.setBackgroundColor(getResources().getColor(R.color.red));
-                    connectionStatus.setText("Failed to load data from server");
-                    Log.d("Response Error : ",error.toString());
+                    connectionStatus.setText(e.getMessage());
+                    swipeRefreshLayout.setRefreshing(false);
                 }
+
+            }, error -> {
+                swipeRefreshLayout.setRefreshing(false);
+                connectionStatus.setBackgroundColor(getResources().getColor(R.color.red));
+                connectionStatus.setText("Failed to load data from server");
+                Log.d("Response Error : ",error.toString());
             });
 
-            Volley.newRequestQueue(getActivity()).add(stringRequest);
+            Volley.newRequestQueue(requireActivity()).add(stringRequest);
 
         } else {
             swipeRefreshLayout.setRefreshing(false);

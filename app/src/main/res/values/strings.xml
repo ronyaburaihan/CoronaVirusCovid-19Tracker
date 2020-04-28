@@ -20,4 +20,6 @@
     <string name="cases_per_million">Cases per million :</string>
     <string name="search">Search</string>
     <string name="search_by_country">Search by country</string>
+    <string name="total_tests">Total tests :</string>
+    <string name="test_per_million">Test per million :</string>
 </resources>
