@@ -1,5 +1,7 @@
 # CoronaVirusCovid-19Tracker
 
+### Demo
+
 <img src="https://user-images.githubusercontent.com/44436797/98022633-0b31ab00-1e30-11eb-811a-cde0ad10accf.gif" width="248" height="540" />
 
 ### Project Description
